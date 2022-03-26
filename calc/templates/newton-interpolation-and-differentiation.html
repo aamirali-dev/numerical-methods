@@ -2,10 +2,21 @@
 
 {% block body %}
 <div class="padding-top">
-  <h6 class="p-40">Newton Interpolation</h6>
+  <h6 class="p-40">Newton Interpolation and Differentiation</h6>
   <form onsubmit="event.preventDefault(); newton_interpolation();" class="w-400 mw-full p-40">
     <!-- w-400 = width: 40rem (400px), mw-full = max-width: 100% -->
 
+    <div class="custom-radio d-inline-block mr-10">
+      <!-- d-inline-block = display: inline-block, mr-10 = margin-right: 1rem (10px) -->
+      <input type="radio" name="operation" id="radio-1" value="Interpolation" checked>
+      <label for="radio-1">Interpolation</label>
+    </div>
+    <div class="custom-radio d-inline-block">
+      <input type="radio" name="operation" id="radio-2" value="Differentiation">
+      <label for="radio-2">Differentiation</label>
+    </div>
+    <br>
+    <br>
     <div class="input-group w-300">
       <input type="number" id="dimensions" class="form-control" placeholder="Number of Points (5)">
       <div class="input-group-append">

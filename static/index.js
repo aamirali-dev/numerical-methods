@@ -210,9 +210,9 @@ function simple_iterative() {
     iterations = []
     iterations.push([a])
     alert(required_accuracy)
-    for(let i=0; i<max_iterations; i++){
+    for (let i = 0; i < max_iterations; i++) {
         iterations.push([parser.evaluate(`df(${iterations[i][0]})`)])
-        if(Math.abs(iterations[i+1][0]-iterations[i][0]) < required_accuracy){
+        if (Math.abs(iterations[i + 1][0] - iterations[i][0]) < required_accuracy) {
             terminator = "Found Approx. Solution"
         }
     }
@@ -301,7 +301,7 @@ function jacobi_and_guass_seiled_helper(no_of_iterations, variable_list, functio
         current_iteration = []
         if (method == 'jacobi') {
             variable_string = variable_list_to_string(iterations[i])
-            
+
             for (let j = 0; j < variable_list.length; j++) {
                 console.log(`${registered_f_list[j]}(${variable_string})`)
                 current_iteration.push(parser.evaluate(`${registered_f_list[j]}(${variable_string})`))
@@ -411,14 +411,14 @@ function jacobi_and_guass_seiled(param) {
 
     let [terminator, iterations] = jacobi_and_guass_seiled_helper(max_iterations, initial_guess, functions, derivations, required_accuracy, method)
     names = []
-    for(let i=1; i<=functions.length; i++){
-        names.push("x"+i)
+    for (let i = 1; i <= functions.length; i++) {
+        names.push("x" + i)
     }
     showResults(names, iterations, round_to, terminator)
 }
 
 
-function newton_interpolation(param){
+function newton_interpolation(param) {
     let no_of_points = document.getElementById('dimensions').value
     if (no_of_points == "") {
         no_of_points = 5
@@ -464,107 +464,110 @@ function newton_interpolation(param){
         }
         return;
     }
+    operation = document.querySelector('input[name="operation"]:checked').value
     method = document.querySelector('input[name="method"]:checked').value
     xp = document.getElementById('xp').value;
     // difference table construction
-    let differentiation_table = [[],[]];
+    let differentiation_table = [[], []];
     for (let i = 0; i < no_of_points; i++) {
         differentiation_table[0].push(x_objects[i].value)
         differentiation_table[1].push(y_objects[i].value)
     }
     index = 1;
-    while(true){
+    while (true) {
         differentiation_table.push([])
         index++
-        for(let i=0; i<differentiation_table[index-1].length-1; i++){
-            try{
-                differentiation_table[index][i] = differentiation_table[index-1][i+1]-differentiation_table[index-1][i]
-            }catch{
+        for (let i = 0; i < differentiation_table[index - 1].length - 1; i++) {
+            try {
+                differentiation_table[index][i] = differentiation_table[index - 1][i + 1] - differentiation_table[index - 1][i]
+            } catch {
 
-                differentiation_table[index][i]=null
+                differentiation_table[index][i] = null
             }
         }
-        if(!differentiation_table[index].some(item => item!==null && item!==0)){
+        if (!differentiation_table[index].some(item => item !== null && item !== 0)) {
             break;
         }
     }
     differentiation_table = differentiation_table[0].map((_, colIndex) => differentiation_table.map(row => row[colIndex]))
-    let h = differentiation_table[1][0]-differentiation_table[0][0]
+    let h = differentiation_table[1][0] - differentiation_table[0][0]
     differences = []
-    for(let i=0; i<differentiation_table.length-1; i++){
-        differences.push(Math.abs(differentiation_table[i][0]-xp))
+    for (let i = 0; i < differentiation_table.length - 1; i++) {
+        differences.push(Math.abs(differentiation_table[i][0] - xp))
     }
     let minIndex = differences.indexOf(Math.min(...differences))
 
-    if(method=='Optimal'){
-        let center = Math.floor(differentiation_table.length/2)
-        if(minIndex <= center){
+    if (method == 'Optimal') {
+        let center = Math.floor(differentiation_table.length / 2)
+        if (minIndex <= center) {
             method = 'Forward'
-        }else{
+        } else {
             method = 'Backward'
         }
     }
 
-    if(method=='Backward'){
-        for(let j=2; j<differentiation_table[0].length; j++){
-            for(let i=differentiation_table.length-1; i>=0; i--){
-                try{
-                    differentiation_table[i][j] = differentiation_table[i+1-j][j]
-                }catch{
+    if (method == 'Backward') {
+        for (let j = 2; j < differentiation_table[0].length; j++) {
+            for (let i = differentiation_table.length - 1; i >= 0; i--) {
+                try {
+                    differentiation_table[i][j] = differentiation_table[i + 1 - j][j]
+                } catch {
                     differentiation_table[i][j] = undefined
                 }
             }
         }
     }
 
-    if(method=='Forward'){
-        while(differentiation_table[minIndex][3]==undefined){
+    if (method == 'Forward') {
+        while (differentiation_table[minIndex][3] == undefined) {
             minIndex--
         }
-    }else if(method=='Backward'){
-        while(differentiation_table[minIndex][3]==undefined){
+    } else if (method == 'Backward') {
+        while (differentiation_table[minIndex][3] == undefined) {
             console.log(differentiation_table[minIndex][3])
             console.log(minIndex)
             minIndex++
         }
     }
 
-    let p = (xp-differentiation_table[minIndex][0])/h
+    let p = (xp - differentiation_table[minIndex][0]) / h
 
-
-    results = parseFloat(differentiation_table[minIndex][1])
-    if(method=='Forward'){
+    if (operation == 'Interpolation') {
+        results = parseFloat(differentiation_table[minIndex][1])
+        if (method == 'Forward') {
+            expand = (p, j) => p - j
+        } else if (method == 'Backward') {
+            expand = (p, j) => p + j
+        }
         let i = 1;
-        while(differentiation_table[minIndex][i+1]!==undefined){
+        while (differentiation_table[minIndex][i + 1] !== undefined) {
             let p_multipliers = p
-            for(let j=1; j<i; j++){
-                p_multipliers *= (p-j)
+            for (let j = 1; j < i; j++) {
+                p_multipliers *= expand(p, j)
             }
-            console.log(p_multipliers + ": " + i);
-            console.log((differentiation_table[minIndex][i+1] * p_multipliers) / factorial(i))
-            results += (differentiation_table[minIndex][i+1] * p_multipliers) / factorial(i)
-            console.log(results)
+            results += (differentiation_table[minIndex][i + 1] * p_multipliers) / factorial(i)
             i++
         }
-    }else if(method=='Backward'){
-        let i=1;
-        while(differentiation_table[minIndex][i+1]!==undefined){
-            let p_multipliers = p
-            for(let j=1; j<i; j++){
-                p_multipliers *= (p+j)
-            }
-            results += (differentiation_table[minIndex][i+1] * p_multipliers) / factorial(i)
-            i++
+
+    } else if (operation == 'Differentiation') {
+        if (method == 'Forward') {
+            results = parseFloat(differentiation_table[minIndex][2]) +
+                ((2 * p - 1) / 2) * differentiation_table[minIndex][3] +
+                ((3 * (p * p) - 6 * p + 2) / 6) * differentiation_table[minIndex][4]
+            results /= h
+        } else if (method == 'Backward') {
+
         }
     }
+
     // difference table headings construction
     let names = ["x", "y"]
-    if(method=='Forward'){
-        for(let i=1; i<index; i++){
+    if (method == 'Forward') {
+        for (let i = 1; i < index; i++) {
             names.push(`Δ<super>${i}</super>y`)
         }
-    }else if(method=='Backward'){
-        for(let i=1; i<index; i++){
+    } else if (method == 'Backward') {
+        for (let i = 1; i < index; i++) {
             names.push(`∇<super>${i}</super>y`)
         }
     }
@@ -573,14 +576,13 @@ function newton_interpolation(param){
 }
 
 
-function factorial(n)
-    {
-        if (n < 0) {
-            console.log('Error! Factorial for negative number does not exist.');
-            return;
-        }
-        var fact = 1;
-        for (var i = 2; i <= n; i++)
-            fact *= i;
-        return fact;
+function factorial(n) {
+    if (n < 0) {
+        console.log('Error! Factorial for negative number does not exist.');
+        return;
     }
+    var fact = 1;
+    for (var i = 2; i <= n; i++)
+        fact *= i;
+    return fact;
+}
