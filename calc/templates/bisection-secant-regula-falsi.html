@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="padding-top">
+  <h6 id="method" class="p-40">Bisection</h6>
+  <form onsubmit="event.preventDefault(); non_linear();" class="w-400 mw-full p-40">
+    <!-- w-400 = width: 40rem (400px), mw-full = max-width: 100% -->
+    <input type="text" class="form-control" id="function" placeholder="Function (in variable x)" required="required">
+    <br>
+    <input type="number" class="form-control" id="initial-guess-a" placeholder="Initial guess a" required="required">
+    <br>
+    <input type="number" class="form-control" id="initial-guess-b" placeholder="Initial guess b" required="required">
+    <br>
+    <div class="padding-bottom">
+      <div class="custom-radio d-inline-block mr-10"> <!-- d-inline-block = display: inline-block, mr-10 = margin-right: 1rem (10px) -->
+        <input type="radio" name="method" id="radio-3" value="Bisection" checked>
+        <label for="radio-3">Bisection</label>
+      </div>
+      <div class="custom-radio d-inline-block">
+        <input type="radio" name="method" id="radio-4" value="Secant">
+        <label for="radio-4">Secant &nbsp</label>
+      </div>
+      <div class="custom-radio d-inline-block">
+        <input type="radio" name="method" id="radio-5" value="Regula-Falsi">
+        <label for="radio-5">Regula-Falsi</label>
+      </div>
+    </div>
+    <details class="collapse-panel w-400 mw-full">
+      <!-- w-400 = width: 40rem (400px), mw-full = max-width: 100% -->
+      <summary class="collapse-header">
+        Default Settings
+      </summary>
+      <div class="collapse-content">
+        <input type="number" class="form-control" id="max-iterations" placeholder="Max Iterations (default 10)">
+        <br>
+        <input type="number" min="0" max="1" step="0.0000000001" class="form-control" id="required-accuracy"
+          placeholder="Required Accuracy (default 0.0001)">
+        <br>
+        <input type="number" class="form-control" id="round-to" placeholder="Round To (default 3)">
+      </div>
+    </details>
+    <!-- Submit button -->
+    <br>
+    <input class="btn" type="submit" value="Submit">
+  </form>
+</div>
+{% endblock %}

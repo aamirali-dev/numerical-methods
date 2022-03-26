@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Numerical Calculator</title>
+  <link rel="shortcut icon" type="image/png" href="{% static '/favicon.ico' %}"/>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.1.1/math.min.js" integrity="sha512-o7l/Uxf+iFLa5H6VpPjFdrY+bF+JtYI47FXfYJp6zlCRhs8K8sO1EVyEiS/1FeEvw1b6HeK6oXT3Plza8L/NIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="{% static '/index.js' %}"></script>
+  <link href="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/css/halfmoon-variables.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{% static '/style.css' %}">
+</head>
+
+<body class="with-custom-webkit-scrollbars with-custom-css-scrollbars" data-dm-shortcut-enabled="true"
+  data-sidebar-shortcut-enabled="true" data-set-preferred-theme-onload="true">
+  <div class="container-fluid">
+    <div class="position-absolute top-0 right-0 z-10 p-10">
+      <a class="btn btn-square" type="a" onclick={halfmoon.toggleDarkMode()}>
+        <i class="fa fa-moon-o" aria-hidden="true">🌙</i>
+        <span class="sr-only">Toggle dark mode</span>
+      </a>
+    </div>
+    <div class="position-absolute top-0 left-0 z-10 p-10">
+      <button class="btn btn-square" type="button">
+        <a class="fa fa-moon-o" aria-hidden="true" href="{% url 'index' %}"><img height="15" width="15" src="{% static '/icons8-home-50.png' %}"
+            alt="Home"></a>
+        <span class="sr-only">Home</span>
+      </button>
+    </div>
+  </div>
+  {% block body %}
+  {% endblock %}
+
+  <div id="result" class="p-40"></div>
+  <script src="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/js/halfmoon.min.js"></script>
+</body>
+
+</html>

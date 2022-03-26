@@ -1,0 +1,23 @@
+.card-fixed{
+    height: max-content;
+    width: max-content;
+    font-family: "Satisfy", cursive;
+    font-style: bold;
+    font-size: small;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: 10px;
+}
+
+.p-40{
+    /* padding-top: 40px; */
+    padding-left: 10px;
+}
+
+.padding-top{
+    padding-top: 50px;
+}
+.padding-bottom{
+    padding-bottom: 30px;
+}

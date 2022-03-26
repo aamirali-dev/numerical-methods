@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="padding-top">
+  <h6 class="p-40">Newton Interpolation</h6>
+  <form onsubmit="event.preventDefault(); newton_interpolation();" class="w-400 mw-full p-40">
+    <!-- w-400 = width: 40rem (400px), mw-full = max-width: 100% -->
+
+    <div class="input-group w-300">
+      <input type="number" id="dimensions" class="form-control" placeholder="Number of Points (5)">
+      <div class="input-group-append">
+        <button class="btn" type="button" onclick="newton_interpolation('expand_input')">Done</button>
+      </div>
+    </div>
+    <br>
+    <div class="form-row row-eq-spacing">
+      <fieldset id="x_values" class="col">
+        <legend>Points</legend>
+        <input type="text" class="form-control x" placeholder="x" required="required">
+        <br>
+        <input type="text" class="form-control x" placeholder="x" required="required">
+        <br>
+        <input type="text" class="form-control x" placeholder="x" required="required">
+        <br>
+        <input type="text" class="form-control x" placeholder="x" required="required">
+        <br>
+        <input type="text" class="form-control x" placeholder="x" required="required">
+      </fieldset>
+      <fieldset id="y_values" class="col">
+        <legend>F values</legend>
+        <input type="text" class="form-control y" placeholder="y" required="required">
+        <br>
+        <input type="text" class="form-control y" placeholder="y" required="required">
+        <br>
+        <input type="text" class="form-control y" placeholder="y" required="required">
+        <br>
+        <input type="text" class="form-control y" placeholder="y" required="required">
+        <br>
+        <input type="text" class="form-control y" placeholder="y" required="required">
+      </fieldset>
+    </div>
+    <label for="xp">X<sub>p</sub></label>
+    <input type="text" class="form-control" id="xp" placeholder="Xp" required="required">
+    <br>
+    <div class="custom-radio d-inline-block mr-10">
+      <!-- d-inline-block = display: inline-block, mr-10 = margin-right: 1rem (10px) -->
+      <input type="radio" name="method" id="radio-3" value="Forward" checked>
+      <label for="radio-3">Forward</label>
+    </div>
+    <div class="custom-radio d-inline-block">
+      <input type="radio" name="method" id="radio-4" value="Backward">
+      <label for="radio-4">Backward &nbsp</label>
+    </div>
+    <div class="custom-radio d-inline-block">
+      <input type="radio" name="method" id="radio-5" value="Optimal">
+      <label for="radio-5">Optimal</label>
+    </div>
+    <br>
+    <!-- Submit button -->
+    <br>
+    <input class="btn" type="submit" value="Submit">
+  </form>
+</div>
+{% endblock %}
