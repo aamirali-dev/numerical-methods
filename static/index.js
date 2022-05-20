@@ -6,28 +6,29 @@ Number.prototype.round = function (places) {
     return +(Math.round(this + "e+" + places) + "e-" + places);
 }
 
-function newton_raphson() {
-    f = document.getElementById('function')
-    f = document.getElementById('function')
-    f = document.getElementById('function')
-    f = document.getElementById('function')
-    f = document.getElementById('function').value
-    df = document.getElementById('derivative').value
-    a = document.getElementById("initial-guess-a").value
-
-    max_iterations = document.getElementById('max-iterations').value
+function update_default_values(){
+    max_iterations = parseInt(document.getElementById('max-iterations').value)
     required_accuracy = document.getElementById("required-accuracy").value
-    round_to = document.getElementById("round-to").value
+    round_to = parseInt(document.getElementById("round-to").value)
 
-    if (max_iterations == "") {
+    if (isNaN(max_iterations)) {
         max_iterations = 10
     }
-    if (round_to == "") {
+    if (isNaN(round_to)) {
         round_to = 3
     }
     if (required_accuracy == "") {
         required_accuracy = 0.0001
     }
+}
+
+function newton_raphson() {
+
+    f = document.getElementById('function').value
+    df = document.getElementById('derivative').value
+    a = document.getElementById("initial-guess-a").value
+
+    update_default_values()
 
     parser = math.parser()
     parser.evaluate('f(x)=' + f)
@@ -66,20 +67,8 @@ function non_linear() {
     a = document.getElementById("initial-guess-a").value
     b = document.getElementById("initial-guess-b").value
 
-    max_iterations = document.getElementById('max-iterations').value
-    required_accuracy = document.getElementById("required-accuracy").value
-    round_to = document.getElementById("round-to").value
+    update_default_values()
     method = document.querySelector('input[name="method"]:checked').value
-
-    if (max_iterations == "") {
-        max_iterations = 10
-    }
-    if (round_to == "") {
-        round_to = 3
-    }
-    if (required_accuracy == "") {
-        required_accuracy = 0.0001
-    }
 
     parser = math.parser()
     parser.evaluate('f(x)=' + f)
@@ -193,19 +182,7 @@ function simple_iterative() {
     df = document.getElementById('derivation').value
     a = document.getElementById("initial-guess-a").value
 
-    max_iterations = document.getElementById('max-iterations').value
-    required_accuracy = document.getElementById("required-accuracy").value
-    round_to = document.getElementById("round-to").value
-
-    if (max_iterations == "") {
-        max_iterations = 10
-    }
-    if (round_to == "") {
-        round_to = 3
-    }
-    if (required_accuracy == "") {
-        required_accuracy = 0.0001
-    }
+    update_default_values()
 
     parser = math.parser()
     parser.evaluate('f(x)=' + f)
@@ -217,7 +194,6 @@ function simple_iterative() {
     terminator = "Max Iterations Reached"
     iterations = []
     iterations.push([a])
-    alert(required_accuracy)
     for (let i = 0; i < max_iterations; i++) {
         iterations.push([parser.evaluate(`df(${iterations[i][0]})`)])
         if (Math.abs(iterations[i + 1][0] - iterations[i][0]) < required_accuracy) {
@@ -403,19 +379,7 @@ function jacobi_and_guass_seiled(param) {
         initial_guess.push(initials_object[i].value)
     }
 
-    max_iterations = document.getElementById('max-iterations').value
-    required_accuracy = document.getElementById("required-accuracy").value
-    round_to = document.getElementById("round-to").value
-
-    if (max_iterations == "") {
-        max_iterations = 10
-    }
-    if (round_to == "") {
-        round_to = 3
-    }
-    if (required_accuracy == "") {
-        required_accuracy = 0.0001
-    }
+    update_default_values()
 
     let [terminator, iterations] = jacobi_and_guass_seiled_helper(max_iterations, initial_guess, functions, derivations, required_accuracy, method)
     names = []
@@ -596,12 +560,6 @@ function factorial(n) {
 }
 
 
-
-
-
-
-
-
 function integration(param) {
     let no_of_points = document.getElementById('dimensions').value
     if (no_of_points == "") {
@@ -724,9 +682,7 @@ function solution_of_ode(){
     h = parseFloat(document.getElementById('h').value)
     method = document.querySelector('input[name="method"]:checked').value
 
-    max_iterations = document.getElementById('max-iterations').value
-    required_accuracy = document.getElementById("required-accuracy").value
-    round_to = document.getElementById("round-to").value
+    update_default_values()
 
     results = [[x0, y0]]
     parser = math.parser()
