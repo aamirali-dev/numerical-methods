@@ -25,14 +25,13 @@ function update_default_values(){
 function newton_raphson() {
 
     f = document.getElementById('function').value
-    df = document.getElementById('derivative').value
     a = document.getElementById("initial-guess-a").value
 
     update_default_values()
 
     parser = math.parser()
     parser.evaluate('f(x)=' + f)
-    parser.evaluate('df(x)=' + df)
+    parser.evaluate("df(x)="+math.derivative(f, 'x').toString())
     if (Math.abs(parser.evaluate(`f(${a})`)) < required_accuracy) {
         alert("Give initial guess is the solution")
         return;
