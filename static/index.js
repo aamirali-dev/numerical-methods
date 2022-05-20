@@ -1,8 +1,16 @@
+max_iterations = 10
+required_accuracy = 0.0001
+round_to = 3
+
 Number.prototype.round = function (places) {
     return +(Math.round(this + "e+" + places) + "e-" + places);
 }
 
 function newton_raphson() {
+    f = document.getElementById('function')
+    f = document.getElementById('function')
+    f = document.getElementById('function')
+    f = document.getElementById('function')
     f = document.getElementById('function').value
     df = document.getElementById('derivative').value
     a = document.getElementById("initial-guess-a").value
@@ -364,11 +372,11 @@ function jacobi_and_guass_seiled(param) {
             deri_obj.value = ""
             init_obj.value = ""
             for (let i = functions_object.length; i < no_of_variables; i++) {
-                function_object.appendChild(func_obj)
+                function_object.appendChild(func_obj.cloneNode(true))
                 function_object.appendChild(document.createElement('br'))
-                derivation_object.appendChild(deri_obj)
+                derivation_object.appendChild(deri_obj.cloneNode(true))
                 derivation_object.appendChild(document.createElement('br'))
-                initial_object.appendChild(init_obj)
+                initial_object.appendChild(init_obj.cloneNode(true))
                 initial_object.appendChild(document.createElement('br'))
             }
         } else if (no_of_variables < functions_object.length) {
@@ -448,9 +456,9 @@ function newton_interpolation(param) {
             y_object.value = ""
             for (let i = x_objects.length; i < no_of_points; i++) {
                 x_value_object.appendChild(document.createElement('br'))
-                x_value_object.appendChild(x_object)
+                x_value_object.appendChild(x_object.cloneNode(true))
                 y_value_object.appendChild(document.createElement('br'))
-                y_value_object.appendChild(y_object)
+                y_value_object.appendChild(y_object.cloneNode(true))
             }
         } else if (no_of_points < x_objects.length) {
             x_brs = x_value_object.getElementsByTagName('br')
@@ -556,7 +564,7 @@ function newton_interpolation(param) {
                 ((3 * (p * p) - 6 * p + 2) / 6) * differentiation_table[minIndex][4]
             results /= h
         } else if (method == 'Backward') {
-
+            // formula missing here
         }
     }
 
@@ -585,4 +593,185 @@ function factorial(n) {
     for (var i = 2; i <= n; i++)
         fact *= i;
     return fact;
+}
+
+
+
+
+
+
+
+
+function integration(param) {
+    let no_of_points = document.getElementById('dimensions').value
+    if (no_of_points == "") {
+        no_of_points = 5
+    }
+    if (no_of_points < 2) {
+        alert("No of Points can't be less than 2")
+        return;
+    }
+
+    let y_value_object = document.getElementById('y_values')
+    let y_objects = y_value_object.getElementsByClassName('y')
+
+    if (param == 'expand_input') {
+        if (no_of_points == y_objects.length) {
+            // alert('requirement already satisified')
+            return;
+        } else if (no_of_points > y_objects.length) {
+            y_object = y_objects[0].cloneNode(true)
+            y_object.value = ""
+            for (let i = y_objects.length; i < no_of_points; i++) {
+                y_value_object.appendChild(document.createElement('br'))
+                y_value_object.appendChild(y_object.cloneNode(true))
+            }
+        } else if (no_of_points < y_objects.length) {
+            y_brs = y_value_object.getElementsByTagName('br')
+            for (let i = no_of_points; i < y_objects.length; i++) {
+                // x_value_object.removeChild(x_brs[i])
+                y_value_object.removeChild(y_objects[i])
+                // y_value_object.removeChild(y_brs[i])
+            }
+        }
+        return;
+    }
+    method = document.querySelector('input[name="method"]:checked').value
+    if(method=="Optimal"){
+        if(y_objects.length==7){
+            method = "Weddle's Rule"
+        }else if(y_objects.length==5){
+            method = "Boole's Rule"
+        }else if(y_objects.length%2==0){
+            method = "Simpsons 1/3"
+        }else{
+            method = "Trapezium"
+        }
+    }
+    h = document.getElementById('h').value
+    area = 0;
+    y_values = []
+    for(let i=0; i<y_objects.length; i++){
+        y_values.push(parseFloat(y_objects[i].value))
+    }
+    switch(method){
+        case "Trapezium":
+            for(let i=1; i<y_values.length-1; i++){
+                area += y_values[i]
+            }
+            area *= 2
+            area += y_values[0] + y_values[y_values.length-1]
+            area *= h/2
+            break
+        case "Simpsons 1/3":
+            if(y_values.length%2 != 0){
+                alert("Simpsons 1/3 Rule can't be applied")
+                return
+            }
+            even_sum = 0, odd_sum=0
+            other_sum = y_values[0] + y_values[y_values.length-1]
+            for(let i=1; i<y_values.length-1; i+=2){
+                odd_sum += y_values[i]
+            }
+            for(let i=2; i<y_values.length-1; i+=2){
+                even_sum += y_values[i]
+            }
+            alert("even sum " + even_sum)
+            alert("odd sum " + odd_sum)
+            alert("other sum" + other_sum)
+            area = h/3*(other_sum + 4*odd_sum + 2*even_sum)
+            break
+        case "Boole's Rule":
+            multipliers = [7, 32, 12, 32, 7]
+            if(y_values.length != 5){
+                alert("Boole's Rule can't be applied")
+                return
+            }
+            for(let i=0; i<5; i++){
+                area += y_values[i] * multipliers[i]
+            }
+            area = (area*2*h)/45
+            break
+        case "Weddle's Rule":
+            multipliers = [1, 5, 1, 6, 1, 5, 1]
+            if(y_values.length != 7){
+                alert("Weddle's Rule can't be applied")
+                return
+            }
+            for(let i=0; i<7; i++){
+                area += y_values[i] * multipliers[i]
+            }
+            area = (area*3*h)/10
+            break
+        default:
+            alert("No such method " + method)
+            return
+    }
+
+    // difference table headings construction
+    let names = []
+    let differentiation_table = []
+    
+    area = area.round(5)
+    showResults(names, differentiation_table, 3, `Method: ${method}, Result: ${area}`)
+}
+
+function solution_of_ode(){
+    f = document.getElementById('function').value
+    x0 = parseFloat(document.getElementById('x0').value)
+    y0 = parseFloat(document.getElementById('y0').value)
+    xn = parseFloat(document.getElementById('xn').value)
+    h = parseFloat(document.getElementById('h').value)
+    method = document.querySelector('input[name="method"]:checked').value
+
+    max_iterations = document.getElementById('max-iterations').value
+    required_accuracy = document.getElementById("required-accuracy").value
+    round_to = document.getElementById("round-to").value
+
+    results = [[x0, y0]]
+    parser = math.parser()
+    parser.evaluate('f(x,y)=' + f)
+    x = x0, y=y0;
+    
+    names = ['xn', 'yn']
+    if(method=='Eular'){
+        let i=0;
+        do{
+            y = results[i][1] + h*parser.evaluate(`f(${x},${y})`)
+            x +=h
+            i+=1
+            results.push([x, y])
+        }while(x<xn)
+    }else if(method=='Taylor'){
+        parser.evaluate("df(x,y)="+math.derivative(f, 'x').toString())
+        parser.evaluate("df2(x,y)="+math.derivative(math.derivative(f, 'x').toString(), 'x'))
+        // parser.evaluate("df3(x,y)="+parser.derivative(parser.derivative(math.derivative(f, 'x').toString(), 'x'), 'x'))
+    
+        let i=0;
+        do{
+            y = y + h*parser.evaluate(`f(${x},${y})`) + h*h*parser.evaluate(`df(${x},${y})`)/2 + h*h*h*parser.evaluate(`df2(${x},${y})`)/6
+            x +=h
+            i+=1
+            results.push([x, y])
+        }while(x<xn)
+    }else if(method=='Range Kutta'){
+        results[0] = [x,y,0,0,0,0]
+        let i=0;
+        do{
+            k1 = h * parser.evaluate(`f(${x},${y})`)
+            k2 = h * parser.evaluate(`f(${x+h/2},${y+k1/2})`)
+            k3 = h * parser.evaluate(`f(${x+h/2},${y+k2/4})`)
+            k4 = h * parser.evaluate(`f(${x+h},${y+k3})`)
+            y = y + (1/6)*(k1 + 2*k2 + 2*k3 + k4)
+            // y = y + h*parser.evaluate(`f(${x},${y})`) + h*h*parser.evaluate(`df(${x},${y})`)/2 + h*h*h*parser.evaluate(`df2(${x},${y})`)/6
+            x +=h
+            i+=1
+            results.push([x, y, k1, k2, k3, k4])
+            names = ['xn', 'yn', 'k1', 'k2', 'k3', 'k4']
+        }while(x<xn)
+    }
+
+    y = y.round(5)
+    showResults(names, results, 3, `Method: ${method}, Result: ${y}`)
+
 }
